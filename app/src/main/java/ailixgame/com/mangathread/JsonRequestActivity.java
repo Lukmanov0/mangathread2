@@ -31,24 +31,29 @@ public class JsonRequestActivity {
 	/**
 	 * Making json object request
 	 * */
-	public void makeJsonObjReq(){
+	public void makeJsonObjReq(int start_count){
 
 		JSONObject jsonObject = new JSONObject();
 
 		try {
-			jsonObject.put("name", "Ilnar");
+			jsonObject.put("limit_start", start_count);
 		}catch (JSONException e){
 			e.printStackTrace();
 		}
 
 
 		JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST,
-				Const.URL_JSON_OBJECT, jsonObject,
+				Const.URL_JSON_OBJECT_MAIN, jsonObject,
 				new Response.Listener<JSONObject>() {
 
 					@Override
 					public void onResponse(JSONObject response) {
-						Log.d(TAG, response.toString());
+						try {
+							Main.resultRequest = response.getJSONArray("result");
+						} catch (JSONException e) {
+							e.printStackTrace();
+						}
+						//Log.d(TAG, response.toString());
 					}
 				}, new Response.ErrorListener() {
 
@@ -67,11 +72,6 @@ public class JsonRequestActivity {
 				headers.put("Content-Type", "application/json; charset=utf-8");
 				return headers;
 			}
-
-		/*	@Override
-			public String getBodyContentType() {
-				return "application/json; charset=utf-8";
-			}*/
 
 			@Override
 			protected Map<String, String> getParams() {

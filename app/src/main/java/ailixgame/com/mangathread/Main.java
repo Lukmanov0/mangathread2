@@ -11,11 +11,15 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,9 +28,13 @@ import ailixgame.com.mangathread.util.Album;
 import ailixgame.com.mangathread.util.AlbumsAdapter;
 
 public class Main extends AppCompatActivity{
+
     private RecyclerView recyclerView;
     private AlbumsAdapter adapter;
     private List<Album> albumList;
+    private JsonRequestActivity jsonRequestActivity;
+    public int StartCount = 0;
+    public static JSONArray resultRequest;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,14 +49,13 @@ public class Main extends AppCompatActivity{
 
         albumList = new ArrayList<>();
         adapter = new AlbumsAdapter(this, albumList);
-
+        jsonRequestActivity = new JsonRequestActivity();
         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 2);
         recyclerView.setLayoutManager(mLayoutManager);
-        recyclerView.addItemDecoration(new GridSpacingItemDecoration(2, dpToPx(10), true));
+        recyclerView.addItemDecoration(new GridSpacingItemDecoration(2, dpToPx(15), true));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(adapter);
-
-        prepareAlbums();
+        prepareManga();
 
         try {
             Glide.with(this).load(R.drawable.cover).into((ImageView) findViewById(R.id.backdrop));
@@ -92,7 +99,9 @@ public class Main extends AppCompatActivity{
     /**
      * Adding few albums for testing
      */
-    private void prepareAlbums() {
+    private void prepareManga() {
+        jsonRequestActivity.makeJsonObjReq(StartCount);
+        Log.i("RESULT", String.valueOf(resultRequest));
         int[] covers = new int[]{
                 R.drawable.album1,
                 R.drawable.album2,
@@ -104,7 +113,8 @@ public class Main extends AppCompatActivity{
                 R.drawable.album8,
                 R.drawable.album9,
                 R.drawable.album10,
-                R.drawable.album11};
+                R.drawable.album11
+        };
 
         Album a = new Album("Расколотая битвой синева небес / Battle Through the Heavens ; Fights Break Sphere / Doupo Cangqiong; Dou Po Cang Qiong", 13, covers[0]);
         albumList.add(a);
@@ -138,6 +148,7 @@ public class Main extends AppCompatActivity{
 
         adapter.notifyDataSetChanged();
     }
+
 
     /**
      * RecyclerView item decoration - give equal margin around grid item
