@@ -19,9 +19,11 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import ailixgame.com.mangathread.util.Album;
@@ -34,7 +36,8 @@ public class Main extends AppCompatActivity{
     private List<Album> albumList;
     private JsonRequestActivity jsonRequestActivity;
     public int StartCount = 0;
-    public static JSONArray resultRequest;
+    //public static JSONArray resultRequest;
+    public static JSONObject resultRequest;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,8 +104,18 @@ public class Main extends AppCompatActivity{
      */
     private void prepareManga() {
         jsonRequestActivity.makeJsonObjReq(StartCount);
-        Log.i("RESULT", String.valueOf(resultRequest));
-        int[] covers = new int[]{
+        Iterator<String> iter = resultRequest.keys();
+        while (iter.hasNext()) {
+            String key = iter.next();
+            try {
+                Object value = resultRequest.get(key);
+                Log.i("RESULT", String.valueOf(value));
+            } catch (JSONException e) {
+                // Something went wrong!
+            }
+        }
+
+            int[] covers = new int[]{
                 R.drawable.album1,
                 R.drawable.album2,
                 R.drawable.album3,

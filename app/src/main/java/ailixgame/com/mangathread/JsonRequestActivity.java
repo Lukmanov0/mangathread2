@@ -48,12 +48,8 @@ public class JsonRequestActivity {
 
 					@Override
 					public void onResponse(JSONObject response) {
-						try {
-							Main.resultRequest = response.getJSONArray("result");
-						} catch (JSONException e) {
-							e.printStackTrace();
-						}
-						//Log.d(TAG, response.toString());
+							Main.resultRequest = response;
+						Log.d(TAG, response.toString());
 					}
 				}, new Response.ErrorListener() {
 
